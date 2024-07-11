@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import approuter from './routes';
 const morgan = require('morgan')
+const cookieParser = require("cookie-parser")
 dotenv.config();
 
 const app: Express = express();
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // remove in production
 app.use(morgan('dev'))
-
+app.use(cookieParser(process.env.COOKIE_SECRET))
 //database connection
 const uri: string =
     process.env.MONGODB_URI || 'mongodb://localhost:27017/';

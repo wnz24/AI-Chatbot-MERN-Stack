@@ -1,4 +1,4 @@
-import mongoose, { CallbackError, Document, Schema } from 'mongoose';
+import mongoose, { CallbackError, Document,Model, Schema } from 'mongoose';
 import { randomUUID } from 'crypto';
 import bcrypt from 'bcrypt';
 
@@ -74,6 +74,5 @@ userSchema.methods.comparePassword = async function (password: string): Promise<
 };
 
 // Create and export the User model
-const User = mongoose.model<IUser>('User', userSchema);
-
+const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 export default User;
