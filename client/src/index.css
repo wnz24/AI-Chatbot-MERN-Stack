@@ -10,3 +10,14 @@ html,body{
  .image-inverted{
   filter:invert(100%) ;
  }
+
+ .nav-link{
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 10px;
+  margin-right: 10px;
+  text-decoration: none;
+  padding: 8px 20px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+ }
