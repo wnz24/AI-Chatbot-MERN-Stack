@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import openai from "../../public/openai.png"
+import openai from "../../../public/openai.png"
 const Logo = () => {
   return (
     <div style={{ display: "flex", marginRight: "auto", alignItems: "center", gap: "8px"  }}>

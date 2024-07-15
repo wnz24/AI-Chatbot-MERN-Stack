@@ -13,6 +13,6 @@ const NavigationLink = (props: Props) => {
       {props.text}
     </Link>
   );
-};
+}; 
 
 export default NavigationLink;

@@ -1,7 +1,7 @@
 import { AppBar, Toolbar } from "@mui/material";
-import Logo from "../utils/Logo";
+import Logo from "./utils/Logo";
 import { useAuth } from "../context/AuthContext";
-import NavigationLink from "../utils/NavigationLink";
+import NavigationLink from "./utils/NavigationLink";
 
 const Header = () => {
   const auth = useAuth();

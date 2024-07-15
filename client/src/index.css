@@ -21,3 +21,8 @@ html,body{
   border-radius: 10px;
   letter-spacing: 1px;
  }
+ 
+ .MuiOutlinedInput-input-root.Mui-focused,
+ .MuiOutlinedInput-notchedOutline{
+  border-color:white !important
+ }
