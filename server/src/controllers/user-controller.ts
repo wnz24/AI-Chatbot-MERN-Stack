@@ -49,7 +49,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
       httpOnly: true,
       signed: true,
     });
-    return res.status(201).json({ success: true, id: user._id });
+    return res.status(200).json({ success: true, name:user.name, email:user.eamil });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, error });
@@ -90,7 +90,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       httpOnly: true,
       signed: true,
     });
-    return res.status(201).json({ success: true, user });
+    return res.status(200).json({ success: true,name:user.name, email:user.eamil });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, error });

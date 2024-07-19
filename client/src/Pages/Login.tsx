@@ -1,8 +1,25 @@
 import { Box, Button, Typography } from "@mui/material";
 import robot from "../../public/airobot.png";
 import CustomizedInputField from "../components/utils/CustomizedInputField";
-
+import { LuLogIn } from "react-icons/lu";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 const Login = () => {
+  const auth = useAuth() 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    try {
+      toast.loading("Logging In",{id:"1"})
+       await auth?.login(email as string,password as string);
+       toast.success("Logged In",{id:"1"})
+    } catch (error) {
+       toast.error("Invalid Credentials",{id:"1"})
+    }
+  };
+  
   return (
     <Box width={"100%"} height={"100%"} display={"flex"} flex={1}>
       <Box padding={8} display={{ md: "flex", sm: "none", xs: "none" }}>
@@ -18,6 +35,7 @@ const Login = () => {
         mt={4}
       >
         <form
+          onSubmit={handleSubmit}
           style={{
             margin: "auto",
             padding: "30px",
@@ -47,12 +65,13 @@ const Login = () => {
                 width: "400px",
                 borderRadius: 2,
                 bgcolor: "#00ffcc",
-                color:"black",
+                color: "black",
                 "&:hover": {
                   bgcolor: "white",
                   color: "black",
                 },
               }}
+              endIcon={<LuLogIn />}
             >
               Login
             </Button>
