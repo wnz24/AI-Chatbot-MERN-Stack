@@ -74,7 +74,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     //create token and save cookie
-    res.clearCookie(COOKIE_NAME, {
+    res.clearCookie(COOKIE_NAME, { 
       path: "/",
       domain: "localhost",
       httpOnly: true,
@@ -90,9 +90,31 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       httpOnly: true,
       signed: true,
     });
-    return res.status(200).json({ success: true,name:user.name, email:user.eamil });
+    return res.status(200).json({ success: true, name:user.name, email:user.email });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, error });
   }
 };
+
+//verity user
+export const verifyuser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+   
+    const user: any = await User.findById( res.locals.jwtData.id );
+    if (!user) {
+      return res.status(401).json({ succes: false, message: "User not Registered or Token malfunctioned " });
+    }
+    if(user._id.toString() !== res.locals.jwtData.id){
+      return res.status(200).json("Permissions didn't match")
+    }
+    console.log('====================================');
+    console.log(user._id.toString(), res.locals.jwtData.id);
+    console.log('====================================');
+    return res.status(200).json({ success: true, name:user.name, email:user.email });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false, error });
+  }
+};
+

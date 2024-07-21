@@ -2,9 +2,12 @@ import { AppBar, Toolbar } from "@mui/material";
 import Logo from "./utils/Logo";
 import { useAuth } from "../context/AuthContext";
 import NavigationLink from "./utils/NavigationLink";
+// import { useEffect } from "react";
+
 
 const Header = () => {
   const auth = useAuth();
+
   return (
     <AppBar sx={{ bgcolor: "transparent", position: "static", boxShadow: "none" }}>
       <Toolbar sx={{ display: "flex" }}>
