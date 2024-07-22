@@ -4,19 +4,20 @@ import bcrypt from 'bcrypt';
 
 // Interface for the chat schema
 interface IChat {
-  id: string;
-  roles: string;
-  content: string;
+  id: string; // Use lowercase `string` for consistency
+  role: string; // Use lowercase `string` for consistency
+  content: string; // Use lowercase `string` for consistency
 }
 
 // Interface for the user schema
 interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
+  name: string; // Use lowercase `string` for consistency
+  email: string; // Use lowercase `string` for consistency
+  password: string; // Use lowercase `string` for consistency
   chats: IChat[];
   comparePassword(password: string): Promise<boolean>;
 }
+
 
 // Define chat schema
 const chatSchema = new Schema<IChat>({
@@ -24,7 +25,7 @@ const chatSchema = new Schema<IChat>({
     type: String,
     default: randomUUID,
   },
-  roles: {
+  role: {
     type: String,
     required: true,
   },

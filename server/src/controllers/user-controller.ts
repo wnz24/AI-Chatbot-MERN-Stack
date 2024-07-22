@@ -29,7 +29,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     if (existinguser) {
       return res.status(401).send("User already Exist");
     }
-    const user:any = await User.create({ name, email, password });
+    const user: any = await User.create({ name, email, password });
     await user.save();
 
     //create token and save cookie
@@ -49,7 +49,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
       httpOnly: true,
       signed: true,
     });
-    return res.status(200).json({ success: true, name:user.name, email:user.eamil });
+    return res.status(200).json({ success: true, name: user.name, email: user.eamil });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, error });
@@ -74,7 +74,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     //create token and save cookie
-    res.clearCookie(COOKIE_NAME, { 
+    res.clearCookie(COOKIE_NAME, {
       path: "/",
       domain: "localhost",
       httpOnly: true,
@@ -90,7 +90,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       httpOnly: true,
       signed: true,
     });
-    return res.status(200).json({ success: true, name:user.name, email:user.email });
+    return res.status(200).json({ success: true, name: user.name, email: user.email });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, error });
@@ -100,21 +100,19 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 //verity user
 export const verifyuser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-   
-    const user: any = await User.findById( res.locals.jwtData.id );
+    const user: any = await User.findById(res.locals.jwtData.id);
     if (!user) {
-      return res.status(401).json({ succes: false, message: "User not Registered or Token malfunctioned " });
+      return res
+        .status(401)
+        .json({ succes: false, message: "User not Registered or Token malfunctioned " });
     }
-    if(user._id.toString() !== res.locals.jwtData.id){
-      return res.status(200).json("Permissions didn't match")
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(200).json("Permissions didn't match");
     }
-    console.log('====================================');
-    console.log(user._id.toString(), res.locals.jwtData.id);
-    console.log('====================================');
-    return res.status(200).json({ success: true, name:user.name, email:user.email });
+
+    return res.status(200).json({ success: true, name: user.name, email: user.email });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false, error });
   }
 };
-
