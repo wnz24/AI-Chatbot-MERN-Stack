@@ -13,9 +13,13 @@ export const generateChatController = async (req: Request, res: Response, next: 
     const user = await User.findById(res.locals.jwtData.id);
     if (!user) return res.status(401).json({ message: "User not registered OR the token malfunctioned" });
 
+    // Ensure chats array exists
+    if (!user.chats) user.chats = [];
+
     // Grab chats of user with allowed roles
     const chats = user.chats.map(({ role, content }) => ({ role: role as Role, content }));
-    chats.push({ content: message, role: "user" as Role });
+    chats.push({ content: message, role: "user" });
+
     user.chats.push({
       content: message,
       role: "user",
@@ -23,10 +27,10 @@ export const generateChatController = async (req: Request, res: Response, next: 
     });
 
     // Send all chats with new one to OpenAI
-    const openai = configureopenai();
+    const openai: OpenAI = configureopenai();
 
     const chatResponse = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Ensure this model exists
+      model: "gpt-3.5-turbo", 
       messages: chats,
     });
 
@@ -35,14 +39,15 @@ export const generateChatController = async (req: Request, res: Response, next: 
 
     user.chats.push({
       content: latestContent,
-      role: "assistant" as Role,
+      role: "assistant",
       id: "",
     });
 
     await user.save();
 
-    return res.json({ message: latestContent,chats:user.chats });
+    return res.json({ message: latestContent, chats: user.chats });
   } catch (error) {
-    return res.json({ message: "Something is wrong" }) // Handle errors properly
+    console.error("Error in generateChatController:", error);
+    return res.status(500).json({ message: "Something went wrong",error });
   }
 };
