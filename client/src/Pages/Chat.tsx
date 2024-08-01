@@ -3,10 +3,10 @@ import { useAuth } from "../context/AuthContext";
 import { red } from "@mui/material/colors";
 import Chat_Item from "../components/chat/Chat_Item";
 import { IoMdSend } from "react-icons/io";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { deletechats, getuserchat, SendCHatRequest } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom";
 type Message = {
   role: "user" | "assistant";
   content: string;
@@ -16,7 +16,7 @@ const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const auth = useAuth();
-
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
     if (inputRef && inputRef.current) {
@@ -27,19 +27,18 @@ const Chat = () => {
     const chatdata = await SendCHatRequest(content);
     setChatMessages([...chatdata.chats]);
   };
- //deletechats
- const handleDelete = async () => {
-  try {
-    toast.loading("Deleteing Chats",{id:"deletechats"})
-    await deletechats();
-    setChatMessages([]);
-    toast.success("Deleted Chats",{id:"deletechats"})
-
-  } catch (error) {
-    console.log(error)
-    toast.error("Error deleting chats",{id:"deletechats"})
-  }
- }
+  //deletechats
+  const handleDelete = async () => {
+    try {
+      toast.loading("Deleteing Chats", { id: "deletechats" });
+      await deletechats();
+      setChatMessages([]);
+      toast.success("Deleted Chats", { id: "deletechats" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting chats", { id: "deletechats" });
+    }
+  };
   //get user chats
   useLayoutEffect(() => {
     if (auth?.isLoggedIn && auth.user) {
@@ -53,6 +52,13 @@ const Chat = () => {
           console.log(err);
           toast.error("Lodding failed", { id: "loadchats" });
         });
+    }
+  }, [auth]);
+
+  //check if user is loogedin ot not
+  useEffect(() => {
+    if (!auth?.user) {
+      return navigate("/login");
     }
   }, [auth]);
 
@@ -94,9 +100,8 @@ const Chat = () => {
               just friendly conversation. Let's chat!
             </Typography>
             <Button
-            onClick={handleDelete}
+              onClick={handleDelete}
               sx={{
-                
                 width: "200px",
                 my: "auto",
                 color: "white",
@@ -105,7 +110,6 @@ const Chat = () => {
                 mx: "auto",
                 bgcolor: red[300],
                 "&:hover": { bgcolor: red.A200 },
-                
               }}
             >
               Clear Conversation

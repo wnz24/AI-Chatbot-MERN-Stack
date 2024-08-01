@@ -56,7 +56,23 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-// user login
+// Logout
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Clear the cookie
+    res.clearCookie(COOKIE_NAME, {
+      path: "/",
+      domain: "localhost",
+      httpOnly: true,
+      signed: true,
+    });
+
+    return res.status(200).json({ success: true });
+  } catch (error ) {
+    console.error(error);
+    return res.status(500).json({ success: false, error});
+  }
+};
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log("req body: ", req.body);
@@ -104,7 +120,7 @@ export const verifyuser = async (req: Request, res: Response, next: NextFunction
     if (!user) {
       return res
         .status(401)
-        .json({ succes: false, message: "User not Registered or Token malfunctioned " });
+        .json({ success: false, message: "User not Registered or Token malfunctioned " });
     }
     if (user._id.toString() !== res.locals.jwtData.id) {
       return res.status(200).json("Permissions didn't match");

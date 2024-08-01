@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { COOKIE_NAME } from "../utils/constants";
+const jwt = require("jsonwebtoken")
 
-const jwt = require("jsonwebtoken");
-
+// Function to create a JWT token
 export const createToken = (id: any, email: string, expiresIn: any) => {
   const payload = { id, email };
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -10,21 +10,19 @@ export const createToken = (id: any, email: string, expiresIn: any) => {
   });
   return token;
 };
+
+// Middleware to verify the JWT token
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-  const token = req.signedCookies[`${COOKIE_NAME}`];
+  const token = req.signedCookies[COOKIE_NAME];
   if (!token) {
-    res.status(401).json({ message: "Token not recieved" });
+    return res.status(401).json({ message: "Token not received" });
   }
-  return new Promise<void>((resolve, reject) => {
-    return jwt.verify(token, process.env.JWT_SECRET, (err: { message: any }, success: any) => {
-      if (err) {
-        reject(err.message);
-        return res.status(401).json({ message: "JWT-TOKEN expired" });
-      } else {
-        resolve();
-        res.locals.jwtData = success;
-        return next();
-      }
-    });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err: any, decoded: any) => {
+    if (err) {
+      return res.status(401).json({ message: "JWT-TOKEN expired" });
+    }
+    res.locals.jwtData = decoded;
+    next();
   });
 };
