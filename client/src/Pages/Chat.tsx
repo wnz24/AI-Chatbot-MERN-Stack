@@ -6,11 +6,13 @@ import { IoMdSend } from "react-icons/io";
 import { useRef, useState } from "react";
 import { SendCHatRequest } from "../helpers/api-communicator";
 
+
+
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
-
+  
 const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
@@ -57,8 +59,12 @@ const Chat = () => {
             <Typography sx={{ mx: "auto", fontFamily: "Work Sans", textAlign: "center" }}>
               You are talking to a Chatbot
             </Typography>
-            <Typography sx={{ mx: "auto", fontFamily: "Work Sans", my: 4, p: 3, textAlign: "center" }}>
-              Welcome to our AI Chatbot! Ask me anything from tech support and news updates to math problems and trivia. I'm here to assist with weather updates, programming tips, or just friendly conversation. Let's chat!
+            <Typography
+              sx={{ mx: "auto", fontFamily: "Work Sans", my: 4, p: 3, textAlign: "center" }}
+            >
+              Welcome to our AI Chatbot! Ask me anything from tech support and news updates to math
+              problems and trivia. I'm here to assist with weather updates, programming tips, or
+              just friendly conversation. Let's chat!
             </Typography>
             <Button
               sx={{
