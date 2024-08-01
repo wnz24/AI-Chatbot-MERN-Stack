@@ -3,16 +3,15 @@ import { useAuth } from "../context/AuthContext";
 import { red } from "@mui/material/colors";
 import Chat_Item from "../components/chat/Chat_Item";
 import { IoMdSend } from "react-icons/io";
-import { useRef, useState } from "react";
-import { SendCHatRequest } from "../helpers/api-communicator";
-
-
+import { useLayoutEffect, useRef, useState } from "react";
+import { deletechats, getuserchat, SendCHatRequest } from "../helpers/api-communicator";
+import toast from "react-hot-toast";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
-  
+
 const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
@@ -28,6 +27,34 @@ const Chat = () => {
     const chatdata = await SendCHatRequest(content);
     setChatMessages([...chatdata.chats]);
   };
+ //deletechats
+ const handleDelete = async () => {
+  try {
+    toast.loading("Deleteing Chats",{id:"deletechats"})
+    await deletechats();
+    setChatMessages([]);
+    toast.success("Deleted Chats",{id:"deletechats"})
+
+  } catch (error) {
+    console.log(error)
+    toast.error("Error deleting chats",{id:"deletechats"})
+  }
+ }
+  //get user chats
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading("Loading Chats", { id: "loadchats" });
+      getuserchat()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success("Successfully loaded chats", { id: "loadchats" });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error("Lodding failed", { id: "loadchats" });
+        });
+    }
+  }, [auth]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", p: 2 }}>
@@ -67,7 +94,9 @@ const Chat = () => {
               just friendly conversation. Let's chat!
             </Typography>
             <Button
+            onClick={handleDelete}
               sx={{
+                
                 width: "200px",
                 my: "auto",
                 color: "white",
@@ -76,6 +105,7 @@ const Chat = () => {
                 mx: "auto",
                 bgcolor: red[300],
                 "&:hover": { bgcolor: red.A200 },
+                
               }}
             >
               Clear Conversation

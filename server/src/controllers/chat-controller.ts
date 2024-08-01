@@ -51,3 +51,44 @@ export const generateChatController = async (req: Request, res: Response, next: 
     return res.status(500).json({ message: "Something went wrong",error });
   }
 };
+
+
+//send chats to user
+export const sendchatstouser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user: any = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ succes: false, message: "User not Registered or Token malfunctioned " });
+    }
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(200).json("Permissions didn't match");
+    }
+
+    return res.status(200).json({ success: true, chats:user.chats });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false, error });
+  }
+};
+//delte chats
+export const deletechats = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user: any = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ succes: false, message: "User not Registered or Token malfunctioned " });
+    }
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(200).json("Permissions didn't match");
+    }
+   user.chats =[];
+   await user.save();
+    return res.status(200).json({ success: true  });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false, error });
+  }
+};
